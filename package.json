@@ -1,0 +1,30 @@
+{
+  "name": "fire-mail",
+  "version": "0.0.0",
+  "description": "Waits for entries at a firebase location and then sends details on by email",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/gintellect/fire-mail"
+  },
+  "keywords": [
+    "firebase",
+    "email",
+    "contact",
+    "form"
+  ],
+  "author": "David Bochenski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gintellect/fire-mail/issues"
+  },
+  "dependencies": {
+    "firebase-token-generator": "~0.1.4",
+    "coffee-script": "~1.6.3",
+    "firebase": "~0.6.9",
+    "dotenv": "~0.2.0"
+  }
+}
