@@ -1,8 +1,9 @@
+path = require 'path'
 fs = require 'fs'
 nconf = require 'nconf'
 _ = require 'underscore'
 
-nconf.file './config.json'
+nconf.file path.resolve(__dirname, '../config.json')
 
 nodemailer = require "nodemailer"
 Firebase = require 'firebase'
