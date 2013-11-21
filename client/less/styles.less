@@ -1,0 +1,150 @@
+@bootstrapPath:   "../../bower_modules/bootstrap/less/";
+
+
+// Core variables and mixins
+@import "@{bootstrapPath}/variables.less";
+//Here is where we could override variables for our specific project:
+//@import "variables-custom.less";
+
+@import "@{bootstrapPath}/mixins.less";
+
+// Reset
+@import "@{bootstrapPath}/normalize.less";
+@import "@{bootstrapPath}/print.less";
+
+// Core CSS
+@import "@{bootstrapPath}/scaffolding.less";
+@import "@{bootstrapPath}/type.less";
+@import "@{bootstrapPath}/code.less";
+@import "@{bootstrapPath}/grid.less";
+@import "@{bootstrapPath}/tables.less";
+@import "@{bootstrapPath}/forms.less";
+@import "@{bootstrapPath}/buttons.less";
+
+// Components
+@import "@{bootstrapPath}/component-animations.less";
+@import "@{bootstrapPath}/glyphicons.less";
+@import "@{bootstrapPath}/dropdowns.less";
+@import "@{bootstrapPath}/button-groups.less";
+@import "@{bootstrapPath}/input-groups.less";
+@import "@{bootstrapPath}/navs.less";
+@import "@{bootstrapPath}/navbar.less";
+@import "@{bootstrapPath}/breadcrumbs.less";
+@import "@{bootstrapPath}/pagination.less";
+@import "@{bootstrapPath}/pager.less";
+@import "@{bootstrapPath}/labels.less";
+@import "@{bootstrapPath}/badges.less";
+@import "@{bootstrapPath}/jumbotron.less";
+@import "@{bootstrapPath}/thumbnails.less";
+@import "@{bootstrapPath}/alerts.less";
+@import "@{bootstrapPath}/progress-bars.less";
+@import "@{bootstrapPath}/media.less";
+@import "@{bootstrapPath}/list-group.less";
+@import "@{bootstrapPath}/panels.less";
+@import "@{bootstrapPath}/wells.less";
+@import "@{bootstrapPath}/close.less";
+
+// Components w/ JavaScript
+@import "@{bootstrapPath}/modals.less";
+@import "@{bootstrapPath}/tooltip.less";
+@import "@{bootstrapPath}/popovers.less";
+@import "@{bootstrapPath}/carousel.less";
+
+// Utility classes
+@import "@{bootstrapPath}/utilities.less";
+@import "@{bootstrapPath}/responsive-utilities.less";
+
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Pad the edges of the mobile views a bit */
+.marketing {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+  /* Navbar positioning foo */
+  .navbar-wrapper {
+    margin-top: 20px;
+  }
+  .navbar-wrapper .container {
+    padding-left:  15px;
+    padding-right: 15px;
+  }
+  .navbar-wrapper .navbar {
+    padding-left:  0;
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+
+  /* The navbar becomes detached from the top, so we round the corners */
+  .navbar-wrapper .navbar {
+    border-radius: 4px;
+  }
+
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+
+}
+
+@media (min-width: 992px) {
+  .featurette-heading {
+    margin-top: 0px;
+  }
+}
+
+#map-canvas {
+  height: 500px;
+}

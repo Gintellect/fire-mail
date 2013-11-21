@@ -1,0 +1,14 @@
+{
+  "name": "fire-mail",
+  "version": "0.0.1",
+  "dependencies": {
+    "html5shiv": "~3.6.2",
+    "bootstrap": "~3.0.0",
+    "respond": "~1.3.0",
+    "requirejs": "~2.1.9",
+    "angular": "~1.2.0",
+    "angular-route": "~1.2.1",
+    "firebase": "*",
+    "angular-fire": "~0.3.1"
+  }
+}
