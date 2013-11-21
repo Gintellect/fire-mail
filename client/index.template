@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fire Mail">
+    <meta name="author" content="Gintellect">
+    <title>Fire Mail - Send contact requests to your inbox</title>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+      <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- styles -->
+    <% if (config.environment === 'dev') { %>
+        <link rel="stylesheet" href="/css/styles.css" />
+    <% } else { %>
+        <link rel="stylesheet" href="/css/styles.min.css?_=v<%= config.uniqueVersion() %>" />
+    <% } %>
+  </head>
+  <body ng-controller="mainController">
+    <div ng-show="user">
+      <button class="btn btn-default" ng-click="logout()">Logout</button>
+      <div>
+        <button ng-click="selectNew()">New Entry</button>
+        <ul ng-repeat="(location, obj) in configurations">
+          <li ng-click="select(obj.name)">{{obj.name}}</li>
+        </ul>
+      </div>
+
+      <form role="form">
+        <div class="form-group">
+          <label >Name</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.name" 
+                 placeholder="Enter a descriptive name">
+        </div>
+        <div class="form-group">
+          <label >Firebase Location</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.firebaseLocation" 
+                 placeholder="Enter the firebase location to watch">
+        </div>
+        <div class="form-group">
+          <label for="inputName">Mail From</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.mailFrom" 
+                 placeholder="Enter the email from address">
+        </div>
+        <div class="form-group">
+          <label for="inputName">Mail To</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.mailTo" 
+                 placeholder="Enter the (comma sep) email to address(es)">
+        </div>
+        <div class="form-group">
+          <label for="inputName">Mail Subject</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.mailSubject" 
+                 placeholder="Enter the emamil subject">
+        </div>
+        <div class="form-group">
+          <label for="inputName">SMTP Service</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.smtpService" 
+                 placeholder="Enter the smtp service (e.g. Mailgun)">
+        </div>
+        <div class="form-group">
+          <label for="inputName">SMTP Host</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.smtpHost" 
+                 placeholder="Enter the smtp Host (not needed if service given)">
+        </div>
+        <div class="form-group">
+          <label for="inputName">SMTP Port</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.smtpPort" 
+                 placeholder="Enter the smtp Port (not needed if service given)">
+        </div>
+        <div class="form-group">
+          <label for="inputName">SMTP User</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="entry.smtpUser" 
+                 placeholder="Enter the smtp username">
+        </div>
+        <div class="form-group">
+          <label for="inputName">SMTP Password</label>
+          <input type="password" 
+                 class="form-control" 
+                 ng-model="entry.smtpPass" 
+                 placeholder="Enter the smtp password">
+        </div>
+        <div class="form-group">
+          <label for="inputName">Mail Fields</label>
+          <ul ng-repeat="(key, value) in entry.fields">
+            <li>{{key}} - {{value}}  <button>Delete</button></li>
+
+          </ul>
+          <input type="text"
+                 class="form-control"
+                 ng-model="key"
+                 placeholder="enter field id">
+          <input type="text"
+                 class="form-control"
+                 ng-model="value"
+                 placeholder="enter field display name">
+          <button class="btn btn-default" ng-click="saveField(key, value)">{{submitFieldText}}</button>
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="saveEntry()">{{submitText}}</button>
+      </form>
+    </div>
+    <div ng-hide="user">
+      <form role="form">
+        <div class="form-group">
+          <label for="inputEmail">Name</label>
+          <input type="text" 
+                 class="form-control" 
+                 ng-model="cred.email"
+                 placeholder="Email">
+        </div>
+        <div classs="form-group">
+          <label for="inputPassword">Password</label>
+          <input type="password" 
+                 class="form-control" 
+                 ng-model="cred.password" 
+                 placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="login()">Login</button>
+    </div>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type='text/javascript'
+        src='https://cdn.firebase.com/v0/firebase-simple-login.js'>
+    </script>
+    <% if (config.environment === 'dev') { %>
+        <script data-main="/js/main.js" src="/js/libs/require.js"></script>
+    <% } else { %>
+        <script src="/js/scripts.min.js?_=v<%= config.uniqueVersion() %>"></script>
+    <% } %>
+  </body>
+</html>
