@@ -1,5 +1,6 @@
 fs = require 'fs'
 nconf = require 'nconf'
+_ = require 'underscore'
 
 nconf.file './config.json'
 
@@ -8,61 +9,85 @@ Firebase = require 'firebase'
 FirebaseTokenGenerator = require 'firebase-token-generator'
 
 tokenGenerator = new FirebaseTokenGenerator nconf.get('FIREBASE_SECRET')
-token = tokenGenerator.createToken({username: "admin"})
-contactRequestRef = new Firebase nconf.get('FIREBASE_URI')
+configRequestRef = new Firebase nconf.get('FIREBASE_URI')
 
-transportConfig =
-  auth:
-    user: nconf.get 'SMTP_USER'
-    pass: nconf.get 'SMTP_PASS'
+watchedLocations = []
 
-if nconf.get('SMTP_SERVICE')?
-  transportConfig.service = nconf.get 'SMTP_SERVICE'
-else
-  transportConfig.host = nconf.get 'SMTP_HOST'
-  transportConfig.port = nconf.get 'SMTP_PORT'
+generateToken = () ->
+  tokenGenerator.createToken({id: "admin"})
 
-smtpTransport = nodemailer.createTransport "SMTP", transportConfig
-
-generateHTMLEmail = (record) ->
+generateHTMLEmail = (record, fields) ->
   result = ""
-  fields = nconf.get 'MAIL_FIELDS'
-  fields.forEach (field) ->
-    result = result + "<p>" + field.display + ": " +
-    record[field.property] + "</p>"
-
+  if fields?
+    _.each fields, (value, key) ->
+      result = result + "<p>" + value + ": " +
+      record[key] + "</p>"
+  else
+    result = "no fields to capture defined in your config"
   result
 
-processRecord = (snapshot) ->
+processRecord = (config, snapshot) ->
   record = snapshot.val()
   if (record.status isnt 'Failed') and (record.status isnt 'Delivered')
-    mailOptions =
-      from: nconf.get 'MAIL_FROM'
-      to: nconf.get 'MAIL_TO'
-      subject: nconf.get 'MAIL_SUBJECT'
-      html: generateHTMLEmail record
+    config.mailOptions.html = generateHTMLEmail record, config.fields
+    smtpTransport = nodemailer.createTransport "SMTP", config.transport
 
-    smtpTransport.sendMail mailOptions, (err, result) ->
+    smtpTransport.sendMail config.mailOptions, (err, result) ->
       if err
         snapshot.ref().update {status: 'Failed', message: err}
       else
         snapshot.ref().update {status: 'Delivered', message: result.message}
 
-onAuthComplete = (err, auth) ->
+readConfigAndListen = (record) ->
+  config = 
+    mailOptions:
+      from: record.mailFrom
+      to: record.mailTo
+      subject: record.mailSubject
+    transport:
+      auth:
+        user: record.smtpUser
+        pass: record.smtpPass
+    fields: record.fields
+ 
+  if record.smtpService?
+    config.transport.service = record.smtpService
+  else
+    config.transport.host = record.smtpHost
+    config.transport.port = record.smtpPort
+
+  ref = new Firebase record.firebaseLocation
+  ref.on 'child_added', (snapshot) ->
+    processRecord config, snapshot
+  watchedLocations.push ref
+  return
+
+onConfigAuthComplete = (err, auth) ->
   if err
     console.log 'auth error ' + err
   else
-    console.log 'Logged into firebase.'
-    console.log 'Waiting paitently...'
-    contactRequestRef.on 'child_added', (snapshot) ->
-      processRecord snapshot
+    console.log 'Logged into firebase config.'
+    console.log auth
+    configRequestRef.on 'child_added', (snapshot) ->
+      readConfigAndListen snapshot.val()
 
 onAuthCancel = (err) ->
   console.log 'auth cancelled ' + err
   console.log 'retrying auth'
-  contactRequestRef.auth token, onAuthComplete, onAuthCancel
+  contactRequestRef.auth generateToken(), onAuthComplete, onAuthCancel
+
+onConfigAuthCancel = (err) ->
+  console.log 'config auth cancelled ' + err
+  console.log 'retrying auth'
+
+  #detach all firebase location listeners
+  watchedLocations.forEach (location) ->
+    location.off()
+
+  watchedLocations = []
+
+  configRequestRef.auth generateToken(), onConfigAuthComplete, onConfigAuthCancel
 
 module.exports =
   listen: (options) ->
-    
-    contactRequestRef.auth token, onAuthComplete, onAuthCancel
+    configRequestRef.auth generateToken(), onConfigAuthComplete, onConfigAuthCancel
